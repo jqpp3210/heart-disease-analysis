@@ -79,7 +79,6 @@ class Scaling_Check(BaseEstimator, TransformerMixin):
 
 scaling_checker = Scaling_Check(Min_Max_Scaling_Or_Not,Standard_Scaling_Or_Not)
 diease_data_train_X_scaled = scaling_checker.transform(diease_data_train_X)
-
 '/////////////////////////////data processing/////////////////////////////////'
 
 
@@ -203,10 +202,17 @@ auc(svm_fpr, svm_tpr)
 auc(rf_fpr, rf_tpr)
 
 #Permutation importance
+
+diease_data_train_X_scaled_df = pd.DataFrame(diease_data_train_X_scaled)
+temp = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
+       'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
+diease_data_train_X_scaled_df.columns = temp
+
 import eli5 #for purmutation importance
 from eli5.sklearn import PermutationImportance
 sgd_perm = PermutationImportance(sgd_predictor, random_state=1).fit(diease_data_train_X_scaled, diease_data_train_y)
-eli5.show_weights(sgd_perm, feature_names = diease_data_train_X_scaled.columns.tolist())
+importance = eli5.explain_weights(sgd_perm, feature_names = diease_data_train_X_scaled_df.columns.tolist())
+print(eli5.format_as_text(importance))
 
 
 '//////////////////////////Performance Measures///////////////////////////////'
