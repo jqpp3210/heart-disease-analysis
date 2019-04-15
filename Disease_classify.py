@@ -30,9 +30,15 @@ diease_data = pd.read_csv(DISEASE_PATH+'\\heart.csv')
 diease_data.describe()  #Generate various summary statistics
 diease_data.corr()  #Compute pairwise correlation of columns
 
+#Corelation plot to find important Features
+from matplotlib import pyplot as plt
+import seaborn as sns
+fig,ax = plt.subplots(figsize=(10, 10))
+sns.heatmap(diease_data.corr(), ax=ax, annot=True, linewidths=0.05, fmt= '.2f',cmap="magma")
+plt.show()
+
 #plot the variables and use multiple axis labels to visualize their values
 from pandas.plotting import parallel_coordinates
-from matplotlib import pyplot as plt
 plt.figure(figsize=(10,5))
 parallel_coordinates(diease_data, 'target',color=('#556270', '#4ECDC4'))
 plt.show()
@@ -262,6 +268,7 @@ rf_list_top = plot_feat_importance(diease_data_train_X_scaled_df.columns, rf_per
 
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 def performance(y, y_pred, print_ = 1, *args):   
     """ Calculate performance measures for a given ground truth classification y and predicted 
@@ -286,9 +293,17 @@ def performance(y, y_pred, print_ = 1, *args):
     y_pred[y_pred < threshold] = 0
     
     tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
+    comfuse_result = confusion_matrix(y, y_pred)
     sensitivity = tp/(tp+fn)
     specificity = tn/(tn+fp)
     accuracy = (tp + tn) / (tp + tn + fp + fn)
+    
+    import matplotlib.pyplot as plt
+    #Visualizing the results
+    sns.heatmap(comfuse_result, annot=True)
+    plt.xlabel("Predictions Y")
+    plt.ylabel("Actual Y")
+    plt.show()
     
     # print the performance and plot the ROC curve    
     if print_ == 1:
