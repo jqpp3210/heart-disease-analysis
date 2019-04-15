@@ -48,6 +48,10 @@ from pandas.plotting import scatter_matrix
 attributes = ['age', 'trestbps', 'chol', 'thalach',  'oldpeak']
 scatter_matrix(diease_data[attributes], figsize=(10, 5))
 
+#plot distribution
+plot = diease_data[diease_data.target == 1].age.value_counts().sort_index().plot(kind="bar", figsize=(15,4))
+plot.set_title("Age distribution")
+
 '//////////////////////////////Visualization//////////////////////////////////'
 
 
